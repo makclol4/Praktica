@@ -34,12 +34,12 @@ public class Pawn extends Figure {
     public boolean canAttack(int row, int col, int row1, int col1) {
         switch (this.getColor()) {
             case 'w':
-                if (Math.abs(row1 - row) == 1 && col1 - col == 1) {
+                if (row1 - row == 1 && Math.abs(col1 - col) == 1) {
                     return true;
                 }
                 break;
             case 'b':
-                if (Math.abs(row - row1) == 1 && col - col1 == 1) {
+                if (row - row1 == 1 && Math.abs(col1 - col) == 1) {
                     return true;
                 }
                 break;

@@ -31,12 +31,12 @@ public class Board {
                 new King("K", 'w'), new Bishop("B", 'w'),
                 new Knight("N", 'w'), new Rook("R", 'w')
         };
-        /*this.fields[1] = new Figure[]{
+        this.fields[1] = new Figure[]{
                 new Pawn("P", 'w'), new Pawn("P", 'w'),
                 new Pawn("P", 'w'), new Pawn("P", 'w'),
                 new Pawn("P", 'w'), new Pawn("P", 'w'),
                 new Pawn("P", 'w'), new Pawn("P", 'w'),
-        };*/
+        };
 
         this.fields[7] = new Figure[]{
                 new Rook("R", 'b'), new Knight("N", 'b'),
