@@ -31,11 +31,11 @@ public abstract class Figure {
         this.color = color;
     }
 
-    public boolean canMove(int row, int col, int row1, int col1){
-        return (row1 <8 && row1 >=0 && col1 <8 && col1 >=0);
+    public boolean canMove(int row, int col, int row1, int col1) {
+        return (row1 < 8 && row1 >= 0 && col1 < 8 && col1 >= 0);
     }
 
-    public boolean canAttack(int row, int col, int row1, int col1){
+    public boolean canAttack(int row, int col, int row1, int col1) {
         return this.canMove(row, col, row1, col1);
     }
 

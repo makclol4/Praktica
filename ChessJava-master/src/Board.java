@@ -10,9 +10,9 @@ import java.util.ArrayList;
 
 public class Board {
     //TODO: Список фигур и начальное положение всех фигур
-    private Figure fields[][] = new Figure[8][8];
-    private ArrayList<String> takeWhite = new ArrayList(16);
-    private ArrayList<String> takeBlack = new ArrayList(16);
+    private final Figure[][] fields = new Figure[8][8];
+    private final ArrayList<String> takeWhite = new ArrayList(16);
+    private final ArrayList<String> takeBlack = new ArrayList(16);
 
     public char getColorGaming() {
         return colorGaming;
@@ -52,7 +52,13 @@ public class Board {
         };
     }
 
-    public String getCell(int row, int col) {
+    private static int blackKingRow = 7;
+    private static int blackKingCol = 4;
+    private static int whiteKingRow = 0;
+    private static int whiteKingCol = 4;
+
+
+    public String getCellForPrinting(int row, int col) {
         Figure figure = this.fields[row][col];
         if (figure == null) {
             return "    ";
@@ -71,15 +77,25 @@ public class Board {
     public boolean move_figure(int row1, int col1, int row2, int col2) {
 
         Figure figure = this.fields[row1][col1];
-        //System.out.println(figure + " " + row1 + " " + col1 + " " + row2 + " " + col2);
-        //System.out.println((figure.canMove(row1, col1, row2, col2)) + " " + (this.fields[row2][col2] == null) + " " + isWayClear(row1, col1, row2, col2));
-        if (figure.canMove(row1, col1, row2, col2) && (this.fields[row2][col2] == null) && isWayClear(row1, col1, row2, col2)) {
+
+        if (figure.canMove(row1, col1, row2, col2)
+                && isCellEmpty(row2, col2)
+                && isWayClear(row1, col1, row2, col2)
+                && !isKingUnderAttack(copyFieldsAndMove(row1, col1, row2, col2), getCurrentKingRow(), getCurrentKingCol(), colorGaming)) {
             System.out.println("move");
+            updateKingPositionIfNeedeed(row1, col1, row2, col2);
             this.fields[row2][col2] = figure;
             this.fields[row1][col1] = null;
             return true;
-        } else if (figure.canAttack(row1, col1, row2, col2) && this.fields[row2][col2] != null && this.fields[row2][col2].getColor() != this.fields[row1][col1].getColor() && isWayClear(row1, col1, row2, col2)) {
+
+        } else if (figure.canAttack(row1, col1, row2, col2)
+                && !isCellEmpty(row2, col2)
+                && this.fields[row2][col2].getColor() != this.fields[row1][col1].getColor()
+                && isWayClear(row1, col1, row2, col2)
+                && !(this.fields[row2][col2] instanceof King)
+                && !isKingUnderAttack(copyFieldsAndMove(row1, col1, row2, col2), getCurrentKingRow(), getCurrentKingCol(), colorGaming)) {
             System.out.println("attack");
+            updateKingPositionIfNeedeed(row1, col1, row2, col2);
             switch (this.fields[row2][col2].getColor()) {
                 case 'w':
                     this.takeWhite.add(this.fields[row2][col2].getColor() + this.fields[row2][col2].getName());
@@ -91,9 +107,76 @@ public class Board {
             this.fields[row2][col2] = figure;
             this.fields[row1][col1] = null;
             return true;
+
+        }
+
+        return false;
+    }
+
+    private void updateKingPositionIfNeedeed(int row1, int col1, int row2, int col2) {
+        if (fields[row1][col1] instanceof King) {
+            switch (colorGaming) {
+                case 'w': {
+                    whiteKingRow = row2;
+                    whiteKingCol = col2;
+                }
+                case 'b': {
+                    blackKingRow = row2;
+                    blackKingCol = col2;
+
+                }
+            }
+        }
+    }
+
+    public boolean isGameEnd() {
+        int rowK = getCurrentKingRow();
+        int colK = getCurrentKingCol();
+
+        return isKingUnderAttack(this.fields, rowK, colK, colorGaming)
+                && isKingCantMove(this.fields, rowK, colK);
+    }
+
+    private boolean isKingCantMove(Figure[][] fields, int rowK, int colK) {
+        for (int row = Math.max(rowK - 1, 0); row < Math.min(rowK + 2, 8); row++) {
+            for (int col = Math.max(colK - 1, 0); col < Math.min(colK + 2, 8); col++) {
+                if (fields[row][col] == null && !isKingUnderAttack(copyFieldsAndMove(rowK, colK, row, col), row, col, getColorGaming())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isCellEmpty(int row, int col) {
+        return fields[row][col] == null;
+    }
+
+    private static boolean isKingUnderAttack(Figure[][] fields, int rowK, int colK, char colorGaming) {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                if (fields[row][col] != null && fields[row][col].getColor() != colorGaming) {
+                    Figure figure = fields[row][col];
+                    if (figure.canAttack(row, col, rowK, colK)) {
+                        System.out.println("ШАХ");
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }
+
+    private Figure[][] copyFieldsAndMove(int row1, int col1, int row2, int col2) {
+        Figure[][] newFields = new Figure[8][8];
+        for (int row = 0; row < 8; row++) {
+            System.arraycopy(this.fields[row], 0, newFields[row], 0, 8);
+        }
+        newFields[row2][col2] = newFields[row1][col1];
+        newFields[row1][col1] = null;
+        return newFields;
+    }
+
 
     private boolean isWayClear(int row1, int col1, int row2, int col2) {
         Figure figure = this.fields[row1][col1];
@@ -145,23 +228,23 @@ public class Board {
         int sum2 = row2 + col2;
         if (sum1 == sum2) {
             if (row1 > row2) {
-                for (int i = row1-1, j = col1+1; i > row2 && j < col2; i--, j++) {
+                for (int i = row1 - 1, j = col1 + 1; i > row2 && j < col2; i--, j++) {
                     if (fields[i][j] != null) return false;
                 }
             }
             if (row1 < row2) {
-                for (int i = row1+1, j = col1-1; i < row2 && j > col2; i++, j--) {
+                for (int i = row1 + 1, j = col1 - 1; i < row2 && j > col2; i++, j--) {
                     if (fields[i][j] != null) return false;
                 }
             }
         } else {
             if (sum2 > sum1) {
-                for (int i = row1+1, j = col1+1; i < row2 && j < col2; i++, j++) {
+                for (int i = row1 + 1, j = col1 + 1; i < row2 && j < col2; i++, j++) {
                     if (fields[i][j] != null) return false;
                 }
             }
             if (sum2 < sum1) {
-                for (int i = row1-1, j = col1-1; i > row2 && j > col2; i--, j--) {
+                for (int i = row1 - 1, j = col1 - 1; i > row2 && j > col2; i--, j--) {
                     if (fields[i][j] != null) return false;
                 }
             }
@@ -169,12 +252,26 @@ public class Board {
         return true;
     }
 
+    private int getCurrentKingRow() {
+        if (colorGaming == 'w')
+            return whiteKingRow;
+        else
+            return blackKingRow;
+    }
+
+    private int getCurrentKingCol() {
+        if (colorGaming == 'w')
+            return whiteKingCol;
+        else
+            return blackKingCol;
+    }
+
     public void print_board() {
         System.out.println(" +----+----+----+----+----+----+----+----+");
         for (int row = 7; row > -1; row--) {
             System.out.print(row);
             for (int col = 0; col < 8; col++) {
-                System.out.print("|" + getCell(row, col));
+                System.out.print("|" + getCellForPrinting(row, col));
             }
             System.out.println("|");
             System.out.println(" +----+----+----+----+----+----+----+----+");

@@ -59,6 +59,8 @@ public class Main {
                 col2 = Integer.parseInt(coords[3]);
             }
 
+            game = !board.isGameEnd();
+
             switch (board.getColorGaming()) {
                 case 'w':
                     board.setColorGaming('b');
@@ -67,9 +69,7 @@ public class Main {
                     board.setColorGaming('w');
                     break;
             }
-
-
         }
-
+        System.out.println("Конец игры!!!");
     }
 }
