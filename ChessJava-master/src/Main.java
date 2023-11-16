@@ -32,7 +32,7 @@ public class Main {
 
 
             String inputLine = in.nextLine();
-            while (inputLine == "") {
+            while (inputLine.isBlank()) {
                 System.out.println("Ошибка хода, повторите ввод хода!");
                 inputLine = in.nextLine();
             }

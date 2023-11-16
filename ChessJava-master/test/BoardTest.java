@@ -58,5 +58,4 @@ public class BoardTest {
 
         Assert.assertFalse(board.isGameEnd());
     }
-
 }
