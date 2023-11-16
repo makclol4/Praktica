@@ -1,18 +1,12 @@
-import Figures.Bishop;
-import Figures.Figure;
-import Figures.King;
-import Figures.Knight;
-import Figures.Pawn;
-import Figures.Queen;
-import Figures.Rook;
+import figures.*;
 
 import java.util.ArrayList;
 
 public class Board {
     //TODO: Список фигур и начальное положение всех фигур
-    private final Figure[][] fields = new Figure[8][8];
-    private final ArrayList<String> takeWhite = new ArrayList(16);
-    private final ArrayList<String> takeBlack = new ArrayList(16);
+    final Figure[][] fields = new Figure[8][8];
+    private final ArrayList<String> takeWhite = new ArrayList<>(16);
+    private final ArrayList<String> takeBlack = new ArrayList<>(16);
 
     public char getColorGaming() {
         return colorGaming;
@@ -26,37 +20,36 @@ public class Board {
 
     public void init() {
         this.fields[0] = new Figure[]{
-                new Rook("R", 'w'), new Knight("N", 'w'),
-                new Bishop("B", 'w'), new Queen("Q", 'w'),
-                new King("K", 'w'), new Bishop("B", 'w'),
-                new Knight("N", 'w'), new Rook("R", 'w')
+                new Rook('w'), new Knight('w'),
+                new Bishop('w'), new Queen('w'),
+                new King('w'), new Bishop('w'),
+                new Knight('w'), new Rook('w')
         };
         this.fields[1] = new Figure[]{
-                new Pawn("P", 'w'), new Pawn("P", 'w'),
-                new Pawn("P", 'w'), new Pawn("P", 'w'),
-                new Pawn("P", 'w'), new Pawn("P", 'w'),
-                new Pawn("P", 'w'), new Pawn("P", 'w'),
+                new Pawn('w'), new Pawn('w'),
+                new Pawn('w'), new Pawn('w'),
+                new Pawn('w'), new Pawn('w'),
+                new Pawn('w'), new Pawn('w'),
         };
 
         this.fields[7] = new Figure[]{
-                new Rook("R", 'b'), new Knight("N", 'b'),
-                new Bishop("B", 'b'), new Queen("Q", 'b'),
-                new King("K", 'b'), new Bishop("B", 'b'),
-                new Knight("N", 'b'), new Rook("R", 'b')
+                new Rook('b'), new Knight('b'),
+                new Bishop('b'), new Queen('b'),
+                new King('b'), new Bishop('b'),
+                new Knight('b'), new Rook('b')
         };
         this.fields[6] = new Figure[]{
-                new Pawn("P", 'b'), new Pawn("P", 'b'),
-                new Pawn("P", 'b'), new Pawn("P", 'b'),
-                new Pawn("P", 'b'), new Pawn("P", 'b'),
-                new Pawn("P", 'b'), new Pawn("P", 'b'),
+                new Pawn('b'), new Pawn('b'),
+                new Pawn('b'), new Pawn('b'),
+                new Pawn('b'), new Pawn('b'),
+                new Pawn('b'), new Pawn('b'),
         };
     }
 
-    private static int blackKingRow = 7;
-    private static int blackKingCol = 4;
-    private static int whiteKingRow = 0;
-    private static int whiteKingCol = 4;
-
+    static int blackKingRow = 7;
+    static int blackKingCol = 4;
+    static int whiteKingRow = 0;
+    static int whiteKingCol = 4;
 
     public String getCellForPrinting(int row, int col) {
         Figure figure = this.fields[row][col];

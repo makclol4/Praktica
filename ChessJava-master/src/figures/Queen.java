@@ -1,8 +1,8 @@
-package Figures;
+package figures;
 
-public class Knight extends Figure{
-    public Knight(String name, char color) {
-        super(name, color);
+public class Queen extends Figure{
+    public Queen(char color) {
+        super("Q", color);
     }
 
     @Override
@@ -10,8 +10,9 @@ public class Knight extends Figure{
         if (!super.canMove(row, col, row1, col1)) {
             return false;
         }
+        if (Math.abs(row - row1) == Math.abs(col-col1)) return true;
+        return  (row == row1 || col == col1) && (row != row1 || col != col1);
 
-        return (Math.abs(row - row1)==1 && Math.abs(col - col1)==2) || (Math.abs(row - row1)==2 && Math.abs(col - col1)==1);
     }
 
     @Override

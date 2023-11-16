@@ -1,4 +1,4 @@
-package Figures;
+package figures;
 
 // 1(w) - White 2(b) - Black;
 

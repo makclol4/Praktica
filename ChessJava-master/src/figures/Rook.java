@@ -1,8 +1,8 @@
-package Figures;
+package figures;
 
 public class Rook extends Figure {
-    public Rook(String name, char color) {
-        super(name, color);
+    public Rook(char color) {
+        super("R", color);
     }
 
     @Override

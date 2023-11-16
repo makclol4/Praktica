@@ -1,11 +1,11 @@
-package Figures;
+package figures;
 
 public class Pawn extends Figure {
 
     private boolean isFirstStep = true;
 
-    public Pawn(String name, char color) {
-        super(name, color);
+    public Pawn(char color) {
+        super("P", color);
     }
 
     @Override

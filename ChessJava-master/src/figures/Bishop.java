@@ -1,8 +1,8 @@
-package Figures;
+package figures;
 
 public class Bishop extends Figure{
-    public Bishop(String name, char color) {
-        super(name, color);
+    public Bishop(char color) {
+        super("B", color);
     }
 
     @Override
