@@ -30,6 +30,9 @@ public class Main {
                     break;
             }
 
+            if (board.isKingUnderAttack()) {
+                System.out.println("ШАХ");
+            }
 
             String inputLine = in.nextLine();
             while (inputLine.isBlank()) {
@@ -59,7 +62,10 @@ public class Main {
                 col2 = Integer.parseInt(coords[3]);
             }
 
-            game = !board.isGameEnd();
+            if (board.isGameEnd()) {
+                System.out.println("Шах и мат, победили " + board.getColorGaming());
+                game = false;
+            }
 
             switch (board.getColorGaming()) {
                 case 'w':
